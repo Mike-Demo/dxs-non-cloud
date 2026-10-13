@@ -1,4 +1,3 @@
-import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -33,5 +32,3 @@ export const PageSkeleton = () => (
     <Skeleton className="h-64 w-full" />
   </div>
 );
-
-export const HomeLink = () => <Link to="/" className="underline">Home</Link>;

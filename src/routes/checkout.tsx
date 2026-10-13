@@ -11,7 +11,7 @@ import { useCheckoutMutation } from "@/lib/data/mutations";
 import type { Order } from "@/lib/data/models";
 import { formatMoney } from "@/lib/data/pricing";
 import { useCart } from "@/lib/stores";
-import { TotalsTable, useCartView } from "./cart";
+import { TotalsTable, useCartView } from "@/components/site/CartSummary";
 
 export const Route = createFileRoute("/checkout")({
   head: () => ({
