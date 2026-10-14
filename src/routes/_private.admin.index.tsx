@@ -46,7 +46,7 @@ function Admin() {
     <div>
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div><p className="eyebrow">CMS</p><h1 className="text-4xl">Content admin</h1></div>
-        <Button asChild><Link to="/admin/content/$id" params={{ id: "new" }}>New content</Link></Button>
+        <div className="flex gap-2"><Button asChild variant="outline"><Link to="/admin/reviews">Reviews</Link></Button><Button asChild><Link to="/admin/content/$id" params={{ id: "new" }}>New content</Link></Button></div>
       </div>
       <Tabs value={s.tab ?? "content"} onValueChange={(t) => set({ tab: t === "media" ? "media" : undefined })} className="mt-6">
         <TabsList><TabsTrigger value="content">Content</TabsTrigger><TabsTrigger value="media">Media library</TabsTrigger></TabsList>
