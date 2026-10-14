@@ -12,6 +12,8 @@ import type {
   FAQ,
   Job,
   MediaAsset,
+  Order,
+  PrivateData,
   Page,
   Product,
   ProductReview,
@@ -260,6 +262,57 @@ const pages: Page[] = [
   },
 ];
 
+
+const seedOrders: Order[] = [
+  ["2026-05-12", "prod-notebook-v1", 3, 1_800],
+  ["2026-06-03", "prod-lamp-v1", 1, 14_900],
+  ["2026-06-21", "prod-mug-v1", 2, 2_400],
+  ["2026-07-08", "prod-tray-v1", 1, 3_900],
+  ["2026-07-30", "prod-lamp-v1", 2, 14_900],
+  ["2026-08-14", "prod-notebook-v2", 4, 2_300],
+  ["2026-08-29", "prod-proofs-v1", 1, 4_200],
+  ["2026-09-09", "prod-mug-v2", 3, 2_900],
+  ["2026-09-25", "prod-lamp-v1", 1, 14_900],
+].map(([date, variantId, qty, price], i) => {
+  const subtotal = (qty as number) * (price as number);
+  const tax = Math.round(subtotal * 0.08);
+  const shipping = subtotal >= 10_000 ? 0 : 800;
+  const at = T(`${date as string}T12:00:00Z`);
+  return {
+    id: `order-${String(i + 1).padStart(3, "0")}`,
+    createdAt: at,
+    updatedAt: at,
+    ownerEmail: "demo.editor@example.com",
+    name: "Demo Editor",
+    items: [{ variantId: variantId as string, productName: productSeeds.find((p) => (variantId as string).startsWith(p.id))?.name ?? "Item", sku: variantId as string, quantity: qty as number, unitPriceMinor: price as number }],
+    currency: "USD" as const,
+    subtotalMinor: subtotal,
+    taxMinor: tax,
+    shippingMinor: shipping,
+    totalMinor: subtotal + tax + shipping,
+    shippingAddress: { line1: "1 Fixture Way", city: "Lisbon", postalCode: "1000-001", country: "Portugal" },
+    orderState: "placed" as const,
+    paymentState: "simulated_paid" as const,
+  };
+});
+
+const privateSeed: PrivateData = {
+  profile: { id: "user-demo", name: "Demo Editor", email: "demo.editor@example.com", bio: "Synthetic demo identity for mock mode.", website: null, avatarDataUrl: null, role: "admin", ...stamp },
+  settings: { id: "settings-demo", theme: "light", locale: "en", emailNotifications: true, productUpdates: false, digestFrequency: "weekly", ...stamp },
+  notifications: [
+    { id: "ntf-1", title: "Order order-009 placed", body: "Ceramic desk lamp × 1", type: "order", href: "/dashboard", readAt: null, createdAt: T("2026-09-25T12:00:00Z"), updatedAt: T("2026-09-25T12:00:00Z") },
+    { id: "ntf-2", title: "Scheduled post due", body: "October roundup publishes on 5 Oct.", type: "content", href: "/admin", readAt: null, createdAt: T("2026-09-28T08:00:00Z"), updatedAt: T("2026-09-28T08:00:00Z") },
+    { id: "ntf-3", title: "DXS Summit registration open", body: "Seats are limited to 200.", type: "event", href: "/events/dxs-summit-2026", readAt: T("2026-09-15T10:00:00Z"), createdAt: T("2026-09-14T10:00:00Z"), updatedAt: T("2026-09-15T10:00:00Z") },
+    { id: "ntf-4", title: "Fixture reset available", body: "Use Reset data in the footer to restore the baseline.", type: "system", href: null, readAt: T("2026-09-02T10:00:00Z"), createdAt: T("2026-09-01T10:00:00Z"), updatedAt: T("2026-09-02T10:00:00Z") },
+  ],
+  tickets: [
+    { id: "tkt-1", subject: "Rich text lost table formatting", category: "content", priority: "high", state: "open", messages: [{ at: T("2026-09-20T09:00:00Z"), from: "customer", body: "Tables in the guide render as paragraphs after export." }], createdAt: T("2026-09-20T09:00:00Z"), updatedAt: T("2026-09-20T09:00:00Z") },
+    { id: "tkt-2", subject: "Invoice copy", category: "billing", priority: "low", state: "resolved", messages: [{ at: T("2026-08-02T09:00:00Z"), from: "customer", body: "Could I get a copy of order-005?" }, { at: T("2026-08-02T15:00:00Z"), from: "agent", body: "Sent to your email." }], createdAt: T("2026-08-02T09:00:00Z"), updatedAt: T("2026-08-02T15:00:00Z") },
+  ],
+  surveys: [],
+  feedback: [],
+};
+
 export const createSeed = (): Dataset =>
   structuredClone({
     media,
@@ -282,5 +335,6 @@ export const createSeed = (): Dataset =>
     newsletter: [],
     registrations: [],
     applications: [],
-    orders: [],
+    orders: seedOrders,
+    private: privateSeed,
   });

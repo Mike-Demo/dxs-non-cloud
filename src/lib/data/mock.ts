@@ -16,7 +16,7 @@ export const memoryStore = (): KeyValueStore => {
   return { get: (k) => m.get(k) ?? null, set: (k, v) => void m.set(k, v), remove: (k) => void m.delete(k) };
 };
 
-const STORAGE_KEY = "dxs:mock-dataset:v1";
+const STORAGE_KEY = "dxs:mock-dataset:v2";
 
 interface MockOptions {
   store: KeyValueStore;
