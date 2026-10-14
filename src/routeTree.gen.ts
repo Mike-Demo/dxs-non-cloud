@@ -32,6 +32,7 @@ import { Route as ProductsSlugRouteImport } from './routes/products.$slug'
 import { Route as ResourcesIndexRouteImport } from './routes/resources.index'
 import { Route as ResourcesSlugRouteImport } from './routes/resources.$slug'
 import { Route as PrivateAdminIndexRouteImport } from './routes/_private.admin.index'
+import { Route as PrivateAdminReviewsRouteImport } from './routes/_private.admin.reviews'
 import { Route as PrivateAdminContentIdRouteImport } from './routes/_private.admin.content.$id'
 
 const IndexRoute = IndexRouteImport.update({
@@ -148,6 +149,11 @@ const PrivateAdminIndexRoute = PrivateAdminIndexRouteImport.update({
   path: '/admin/',
   getParentRoute: () => PrivateRoute,
 } as any)
+const PrivateAdminReviewsRoute = PrivateAdminReviewsRouteImport.update({
+  id: '/admin/reviews',
+  path: '/admin/reviews',
+  getParentRoute: () => PrivateRoute,
+} as any)
 const PrivateAdminContentIdRoute = PrivateAdminContentIdRouteImport.update({
   id: '/admin/content/$id',
   path: '/admin/content/$id',
@@ -176,6 +182,7 @@ export interface FileRoutesByFullPath {
   '/events/': typeof EventsIndexRoute
   '/products/': typeof ProductsIndexRoute
   '/resources/': typeof ResourcesIndexRoute
+  '/admin/reviews': typeof PrivateAdminReviewsRoute
   '/admin/': typeof PrivateAdminIndexRoute
   '/admin/content/$id': typeof PrivateAdminContentIdRoute
 }
@@ -201,6 +208,7 @@ export interface FileRoutesByTo {
   '/events': typeof EventsIndexRoute
   '/products': typeof ProductsIndexRoute
   '/resources': typeof ResourcesIndexRoute
+  '/admin/reviews': typeof PrivateAdminReviewsRoute
   '/admin': typeof PrivateAdminIndexRoute
   '/admin/content/$id': typeof PrivateAdminContentIdRoute
 }
@@ -228,6 +236,7 @@ export interface FileRoutesById {
   '/events/': typeof EventsIndexRoute
   '/products/': typeof ProductsIndexRoute
   '/resources/': typeof ResourcesIndexRoute
+  '/_private/admin/reviews': typeof PrivateAdminReviewsRoute
   '/_private/admin/': typeof PrivateAdminIndexRoute
   '/_private/admin/content/$id': typeof PrivateAdminContentIdRoute
 }
@@ -255,6 +264,7 @@ export interface FileRouteTypes {
     | '/events/'
     | '/products/'
     | '/resources/'
+    | '/admin/reviews'
     | '/admin/'
     | '/admin/content/$id'
   fileRoutesByTo: FileRoutesByTo
@@ -280,6 +290,7 @@ export interface FileRouteTypes {
     | '/events'
     | '/products'
     | '/resources'
+    | '/admin/reviews'
     | '/admin'
     | '/admin/content/$id'
   id:
@@ -306,6 +317,7 @@ export interface FileRouteTypes {
     | '/events/'
     | '/products/'
     | '/resources/'
+    | '/_private/admin/reviews'
     | '/_private/admin/'
     | '/_private/admin/content/$id'
   fileRoutesById: FileRoutesById
@@ -495,6 +507,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivateAdminIndexRouteImport
       parentRoute: typeof PrivateRoute
     }
+    '/_private/admin/reviews': {
+      id: '/_private/admin/reviews'
+      path: '/admin/reviews'
+      fullPath: '/admin/reviews'
+      preLoaderRoute: typeof PrivateAdminReviewsRouteImport
+      parentRoute: typeof PrivateRoute
+    }
     '/_private/admin/content/$id': {
       id: '/_private/admin/content/$id'
       path: '/admin/content/$id'
@@ -509,6 +528,7 @@ interface PrivateRouteChildren {
   PrivateDashboardRoute: typeof PrivateDashboardRoute
   PrivateProfileRoute: typeof PrivateProfileRoute
   PrivateSettingsRoute: typeof PrivateSettingsRoute
+  PrivateAdminReviewsRoute: typeof PrivateAdminReviewsRoute
   PrivateAdminIndexRoute: typeof PrivateAdminIndexRoute
   PrivateAdminContentIdRoute: typeof PrivateAdminContentIdRoute
 }
@@ -517,6 +537,7 @@ const PrivateRouteChildren: PrivateRouteChildren = {
   PrivateDashboardRoute: PrivateDashboardRoute,
   PrivateProfileRoute: PrivateProfileRoute,
   PrivateSettingsRoute: PrivateSettingsRoute,
+  PrivateAdminReviewsRoute: PrivateAdminReviewsRoute,
   PrivateAdminIndexRoute: PrivateAdminIndexRoute,
   PrivateAdminContentIdRoute: PrivateAdminContentIdRoute,
 }

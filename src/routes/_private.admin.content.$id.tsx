@@ -12,6 +12,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { BlockEditor } from "@/components/admin/BlockEditor";
+import { EventFieldsEditor, ProductFieldsEditor, ResourceFieldsEditor, eventDefaults, resourceDefaults } from "@/components/admin/TypedFieldsEditor";
 import { FormField } from "@/components/site/FormField";
 import { NotFoundPanel, PageSkeleton } from "@/components/site/States";
 import { RichText } from "@/components/site/RichText";
@@ -20,7 +21,7 @@ import type { ContentRecord } from "@/lib/data/private-ops";
 import { authorsQuery, categoriesQuery, contentListQuery, contentQuery, mediaQuery, tagsQuery } from "@/lib/data/queries";
 import { useCreateContentMutation, useDeleteContentMutation, useSaveContentMutation } from "@/lib/data/mutations";
 import { NotFoundError } from "@/lib/data/repository";
-import { commonContentSchema, type CommonContentInput, type PostFieldsInput } from "@/lib/data/schemas";
+import { commonContentSchema, type CommonContentInput, type EventFieldsInput, type PostFieldsInput, type ProductFieldsInput, type ResourceFieldsInput, eventFieldsSchema, productFieldsSchema, resourceFieldsSchema, type TypedFields } from "@/lib/data/schemas";
 
 export const Route = createFileRoute("/_private/admin/content/$id")({
   head: () => ({
@@ -124,14 +125,30 @@ function Editor({ item }: { item: ContentRecord }) {
   const post = item.type === "post" ? item.record : null;
   const [fields, setFields] = useState<PostFieldsInput | null>(post ? { excerpt: post.excerpt, authorId: post.authorId, categoryIds: post.categoryIds, tagIds: post.tagIds, heroId: post.heroId, relatedPostIds: post.relatedPostIds, locale: post.locale === "es" || post.locale === "ja" ? post.locale : "en" } : null);
   const [body, setBody] = useState<RichTextDoc>(post?.body ?? []);
+  const [productF, setProductF] = useState<ProductFieldsInput | null>(null);
+  const [eventF, setEventF] = useState<EventFieldsInput | null>(item.type === "event" ? eventDefaults(item.record) : null);
+  const [resourceF, setResourceF] = useState<ResourceFieldsInput | null>(item.type === "resource" ? resourceDefaults(item.record) : null);
   const status = watch("status");
+  const buildTyped = (): TypedFields | undefined | string => {
+    if (fields) return { type: "post", fields, body };
+    const check = <T,>(schema: { safeParse: (v: unknown) => { success: true; data: T } | { success: false; error: { issues: { message: string }[] } } }, v: unknown): T | string => {
+      const res = schema.safeParse(v);
+      return res.success ? res.data : (res.error.issues[0]?.message ?? "Invalid fields");
+    };
+    if (productF) { const v = check(productFieldsSchema, productF); return typeof v === "string" ? v : { type: "product", fields: v }; }
+    if (eventF) { const v = check(eventFieldsSchema, eventF); return typeof v === "string" ? v : { type: "event", fields: v }; }
+    if (resourceF) { const v = check(resourceFieldsSchema, resourceF); return typeof v === "string" ? v : { type: "resource", fields: v }; }
+    return undefined;
+  };
 
   const submit = (nextStatus?: CommonContentInput["status"]) => {
     if (nextStatus) setValue("status", nextStatus);
     return handleSubmit(async (common) => {
       if (fields && !fields.excerpt.trim()) return void toast.error("Excerpt is required");
       try {
-        await save.mutateAsync({ common, ...(fields ? { post: { fields, body } } : {}) });
+        const typed = buildTyped();
+        if (typeof typed === "string") return void toast.error(typed);
+        await save.mutateAsync({ common, ...(typed ? { typed } : {}) });
         toast.success(common.status === "published" ? "Published" : common.status === "scheduled" ? "Scheduled" : common.status === "archived" ? "Archived" : "Draft saved");
       } catch (e) {
         toast.error(e instanceof Error ? e.message : "Could not save");
@@ -183,6 +200,9 @@ function Editor({ item }: { item: ContentRecord }) {
           <FormField id="seoDescription" label="SEO description (optional, ≤160)" error={errors.seoDescription?.message} {...register("seoDescription")} />
         </div>
         {fields && post && <PostFields post={post} fields={fields} setFields={setFields} body={body} setBody={setBody} />}
+        {item.type === "product" && <ProductFieldsEditor product={item.record} value={productF} onChange={setProductF} />}
+        {eventF && <EventFieldsEditor value={eventF} onChange={setEventF} />}
+        {resourceF && <ResourceFieldsEditor value={resourceF} onChange={setResourceF} />}
         <fieldset className="rounded-md border bg-paper p-4">
           <legend className="px-1 font-display text-lg">Publication</legend>
           <div className="grid gap-4 sm:grid-cols-2">

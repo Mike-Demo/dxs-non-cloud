@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { getRepository } from "./client";
-import type { ContentType, RichText } from "./models";
+import type { ContentType } from "./models";
 import type { UploadInput } from "./private-ops";
 import type {
   ApplicationInput,
@@ -11,7 +11,7 @@ import type {
   FeedbackInput,
   MediaMetaInput,
   NewsletterInput,
-  PostFieldsInput,
+  TypedFields,
   ProfileInput,
   RegistrationInput,
   ReviewInput,
@@ -54,7 +54,9 @@ export const useReviewMutation = (productId: string) => useInvalidatingMutation(
 export const useMarkReadMutation = () => useInvalidatingMutation((id: string | "all") => (id === "all" ? getRepository().markAllNotificationsRead() : getRepository().markNotificationRead(id)));
 export const useCreateContentMutation = () => useInvalidatingMutation((type: ContentType) => getRepository().createContent(type));
 export const useSaveContentMutation = (id: string) =>
-  useInvalidatingMutation((v: { common: CommonContentInput; post?: { fields: PostFieldsInput; body: RichText } }) => getRepository().saveContent(id, v.common, v.post));
+  useInvalidatingMutation((v: { common: CommonContentInput; typed?: TypedFields }) => getRepository().saveContent(id, v.common, v.typed));
+export const useModerateReviewMutation = () =>
+  useInvalidatingMutation((v: { id: string; moderation: "approved" | "pending" | "rejected" }) => getRepository().moderateReview(v.id, v.moderation));
 export const useDeleteContentMutation = () => useInvalidatingMutation((id: string) => getRepository().deleteContent(id));
 export const useUploadMediaMutation = () => useInvalidatingMutation((v: UploadInput) => getRepository().uploadMedia(v));
 export const useUpdateMediaMutation = () => useInvalidatingMutation((v: { id: string; input: MediaMetaInput }) => getRepository().updateMedia(v.id, v.input));
