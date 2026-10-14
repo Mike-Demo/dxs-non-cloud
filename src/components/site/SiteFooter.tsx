@@ -36,6 +36,22 @@ export const SiteFooter = () => {
         <span>Data mode: <strong className="font-mono">{repo.mode}</strong> · edits are saved in this browser</span>
         <Button variant="outline" size="sm" onClick={() => void reset()}>Reset data</Button>
       </div>
+      <div className="container-page flex flex-wrap items-center justify-between gap-3 border-t py-4 text-xs text-muted-foreground">
+        <span>
+          MIT licensed. Built by{" "}
+          <a href="https://mikedemo.dev" target="_blank" rel="noreferrer" className="underline hover:text-foreground">
+            Mike "Demo" Demopoulos
+          </a>
+          .
+        </span>
+        <nav aria-label="Social and license" className="flex flex-wrap gap-4">
+          <a href="https://github.com/Mike-Demo" target="_blank" rel="noreferrer" className="hover:text-foreground">GitHub</a>
+          <a href="https://x.com/Mike_Demo" target="_blank" rel="noreferrer" className="hover:text-foreground">X</a>
+          <a href="https://facebook.com/mikedemo42" target="_blank" rel="noreferrer" className="hover:text-foreground">Facebook</a>
+          <a href="https://bsky.app/profile/mikedemo.bsky.social" target="_blank" rel="noreferrer" className="hover:text-foreground">Bluesky</a>
+          <Link to="/licenses" className="hover:text-foreground">License</Link>
+        </nav>
+      </div>
     </footer>
   );
 };
