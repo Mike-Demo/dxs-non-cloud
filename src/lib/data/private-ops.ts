@@ -33,7 +33,10 @@ import {
   type CommonContentInput,
   type FeedbackInput,
   type MediaMetaInput,
-  type PostFieldsInput,
+  type TypedFields,
+  eventFieldsSchema,
+  productFieldsSchema,
+  resourceFieldsSchema,
   type ProfileInput,
   type ReviewInput,
   type SettingsInput,
@@ -88,7 +91,9 @@ export interface PrivateRepository {
   listContent(filter: { type?: ContentType | undefined; status?: ContentSummary["status"] | undefined; search?: string | undefined }): Promise<ContentSummary[]>;
   getContent(id: string): Promise<ContentRecord>;
   createContent(type: ContentType): Promise<{ id: string }>;
-  saveContent(id: string, common: CommonContentInput, post?: { fields: PostFieldsInput; body: RichText }): Promise<ContentRecord>;
+  saveContent(id: string, common: CommonContentInput, typed?: TypedFields): Promise<ContentRecord>;
+  listReviews(moderation?: ProductReview["moderation"]): Promise<(ProductReview & { productName: string })[]>;
+  moderateReview(id: string, moderation: ProductReview["moderation"]): Promise<void>;
   deleteContent(id: string): Promise<{ removedReferences: number }>;
   uploadMedia(input: UploadInput): Promise<MediaAsset>;
   updateMedia(id: string, input: MediaMetaInput): Promise<MediaAsset>;
@@ -253,7 +258,7 @@ export const createPrivateOps = ({ read, save, clock, stamp }: Ctx): PrivateRepo
       }
       return { id: s.id };
     },
-    async saveContent(id, common, post) {
+    async saveContent(id, common, typed) {
       const c = commonContentSchema.parse(common);
       const d = read();
       const found = findContent(d, id);
@@ -264,23 +269,46 @@ export const createPrivateOps = ({ read, save, clock, stamp }: Ctx): PrivateRepo
       const seo = { seoTitle: c.seoTitle || null, seoDescription: c.seoDescription || null, updatedAt: nowIso(), slug: c.slug };
       let next: Dataset;
       if (found.type === "post") {
-        const fields = post ? postFieldsSchema.parse(post.fields) : null;
-        const rec = applyPublication({ ...found.record, ...seo, title: c.title, ...(fields ?? {}), ...(post ? { body: post.body } : {}) }, c);
+        const t = typed?.type === "post" ? typed : null;
+        const fields = t ? postFieldsSchema.parse(t.fields) : null;
+        const rec = applyPublication({ ...found.record, ...seo, title: c.title, ...(fields ?? {}), ...(t ? { body: t.body } : {}) }, c);
         next = { ...d, posts: d.posts.map((x) => (x.id === id ? rec : x)) };
       } else if (found.type === "product") {
-        const rec = applyPublication({ ...found.record, ...seo, name: c.title }, c);
-        next = { ...d, products: d.products.map((x) => (x.id === id ? rec : x)) };
+        const pf = typed?.type === "product" ? productFieldsSchema.parse(typed.fields) : null;
+        const rec = applyPublication({ ...found.record, ...seo, name: c.title, ...(pf ? { availability: pf.availability } : {}) }, c);
+        const variants = pf
+          ? d.variants.map((v) => {
+              const u = pf.variants.find((x) => x.id === v.id && v.productId === id);
+              return u ? { ...v, priceMinor: u.priceMinor, stock: u.stock, updatedAt: nowIso() } : v;
+            })
+          : d.variants;
+        next = { ...d, variants, products: d.products.map((x) => (x.id === id ? rec : x)) };
       } else if (found.type === "event") {
-        const rec = applyPublication({ ...found.record, ...seo, title: c.title }, c);
+        const ef = typed?.type === "event" ? eventFieldsSchema.parse(typed.fields) : null;
+        const extra = ef ? { startAt: new Date(ef.startAt).toISOString(), endAt: new Date(ef.endAt).toISOString(), venue: ef.venue || null, onlineUrl: ef.onlineUrl || null, capacity: ef.capacity, registrationOpen: ef.registrationOpen } : {};
+        const rec = applyPublication({ ...found.record, ...seo, title: c.title, ...extra }, c);
         next = { ...d, events: d.events.map((x) => (x.id === id ? rec : x)) };
       } else {
-        const rec = applyPublication({ ...found.record, ...seo, title: c.title }, c);
+        const rf = typed?.type === "resource" ? resourceFieldsSchema.parse(typed.fields) : null;
+        const rec = applyPublication({ ...found.record, ...seo, title: c.title, ...(rf ?? {}) }, c);
         next = { ...d, resources: d.resources.map((x) => (x.id === id ? rec : x)) };
       }
       save(next);
       const saved = findContent(next, id);
       if (!saved) throw new NotFoundError("Content");
       return saved;
+    },
+    async listReviews(moderation) {
+      const d = read();
+      return d.reviews
+        .filter((r) => !moderation || r.moderation === moderation)
+        .map((r) => ({ ...r, productName: d.products.find((p) => p.id === r.productId)?.name ?? "Deleted product" }))
+        .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+    },
+    async moderateReview(id, moderation) {
+      const d = read();
+      if (!d.reviews.some((r) => r.id === id)) throw new NotFoundError("Review");
+      save({ ...d, reviews: d.reviews.map((r) => (r.id === id ? { ...r, moderation, updatedAt: nowIso() } : r)) });
     },
     async deleteContent(id) {
       const d = read();

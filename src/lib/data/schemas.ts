@@ -140,3 +140,42 @@ export type ReviewInput = z.infer<typeof reviewSchema>;
 export type CommonContentInput = z.infer<typeof commonContentSchema>;
 export type PostFieldsInput = z.infer<typeof postFieldsSchema>;
 export type MediaMetaInput = z.infer<typeof mediaMetaSchema>;
+
+export const productFieldsSchema = z.object({
+  availability: z.enum(["available", "preorder", "discontinued"]),
+  variants: z.array(
+    z.object({
+      id: z.string().min(1),
+      priceMinor: z.number().int("Price must be whole cents").min(0, "Price cannot be negative").max(10_000_000),
+      stock: z.number().int("Stock must be a whole number").min(0, "Stock cannot be negative").max(100_000),
+    }),
+  ),
+});
+
+export const eventFieldsSchema = z
+  .object({
+    startAt: z.string().refine((v) => !Number.isNaN(Date.parse(v)), "Enter a start date"),
+    endAt: z.string().refine((v) => !Number.isNaN(Date.parse(v)), "Enter an end date"),
+    venue: z.string().trim().max(200),
+    onlineUrl: z.union([z.literal(""), z.string().trim().url("Enter a valid URL")]),
+    capacity: z.number().int().min(1, "Capacity must be at least 1").max(100_000),
+    registrationOpen: z.boolean(),
+  })
+  .refine((v) => Date.parse(v.endAt) > Date.parse(v.startAt), { message: "End must be after start", path: ["endAt"] })
+  .refine((v) => v.venue.trim() !== "" || v.onlineUrl !== "", { message: "Add a venue or an online URL", path: ["venue"] });
+
+export const resourceFieldsSchema = z.object({
+  type: z.enum(["guide", "whitepaper", "video", "download"]),
+  summary: z.string().trim().min(1, "Summary is required").max(300),
+  access: z.enum(["public", "email-gated"]),
+});
+
+export type ProductFieldsInput = z.infer<typeof productFieldsSchema>;
+export type EventFieldsInput = z.infer<typeof eventFieldsSchema>;
+export type ResourceFieldsInput = z.infer<typeof resourceFieldsSchema>;
+
+export type TypedFields =
+  | { type: "post"; fields: PostFieldsInput; body: import("./models").RichText }
+  | { type: "product"; fields: ProductFieldsInput }
+  | { type: "event"; fields: EventFieldsInput }
+  | { type: "resource"; fields: ResourceFieldsInput };
