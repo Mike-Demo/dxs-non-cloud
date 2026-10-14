@@ -61,6 +61,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
+      { name: "robots", content: "noindex, nofollow" },
       { title: "DXS — Digital Experience Showcase" },
       { name: "description", content: "A CMS migration testbed with deterministic content, commerce and events." },
       { property: "og:type", content: "website" },
