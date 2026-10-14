@@ -153,7 +153,7 @@ function Editor({ item }: { item: ContentRecord }) {
         <div>
           <nav aria-label="Breadcrumb" className="eyebrow"><Link to="/admin">Admin</Link> / {item.type}</nav>
           <h1 className="mt-1 text-3xl">{watch("title") || "Untitled"}</h1>
-          <p className="mt-1 flex items-center gap-2 text-sm text-muted-foreground"><Badge>{r.status}</Badge> saved state · <a href={publicPath(item)} className="text-primary">Public page</a> (visible only when published)</p>
+          <div className="mt-1 flex items-center gap-2 text-sm text-muted-foreground"><Badge>{r.status}</Badge> saved state · <a href={publicPath(item)} className="text-primary">Public page</a> (visible only when published)</div>
         </div>
         <div className="flex flex-wrap gap-2">
           <Dialog>
