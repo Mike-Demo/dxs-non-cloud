@@ -56,7 +56,7 @@ function ReviewsPage() {
               </div>
               <p className="mt-1 font-display text-lg">{r.title}</p>
               <p className="text-sm text-muted-foreground">{r.body}</p>
-              <p className="mt-1 text-xs text-muted-foreground">{r.authorName} · {new Date(r.createdAt).toLocaleDateString()}</p>
+              <p className="mt-1 text-xs text-muted-foreground">{r.reviewerName} · {new Date(r.createdAt).toLocaleDateString()}</p>
               <div className="mt-3 flex gap-2">
                 {r.moderation !== "approved" && <Button size="sm" disabled={m.isPending} onClick={() => void act(r.id, "approved")}>Approve</Button>}
                 {r.moderation !== "rejected" && <Button size="sm" variant="outline" disabled={m.isPending} onClick={() => void act(r.id, "rejected")}>Reject</Button>}
