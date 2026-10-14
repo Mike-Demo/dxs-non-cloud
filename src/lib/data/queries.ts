@@ -1,6 +1,6 @@
 import { queryOptions } from "@tanstack/react-query";
 import { getRepository } from "./client";
-import type { Resource } from "./models";
+import type { ContentType, PublicationStatus, Resource } from "./models";
 import type { PostQuery, ProductQuery } from "./repository";
 
 const repo = () => getRepository();
@@ -30,3 +30,10 @@ export const testimonialsQuery = (ids?: string[]) => queryOptions({ queryKey: ["
 export const storiesQuery = () => queryOptions({ queryKey: ["dxs", "stories"], queryFn: () => repo().listStories() });
 export const faqsQuery = () => queryOptions({ queryKey: ["dxs", "faqs"], queryFn: () => repo().listFaqs() });
 export const jobsQuery = () => queryOptions({ queryKey: ["dxs", "jobs"], queryFn: () => repo().listJobs() });
+
+export const profileQuery = () => queryOptions({ queryKey: ["dxs", "private", "profile"], queryFn: () => repo().getProfile() });
+export const settingsQuery = () => queryOptions({ queryKey: ["dxs", "private", "settings"], queryFn: () => repo().getSettings() });
+export const snapshotQuery = () => queryOptions({ queryKey: ["dxs", "private", "snapshot"], queryFn: () => repo().getPrivateSnapshot() });
+export const contentListQuery = (f: { type?: ContentType | undefined; status?: PublicationStatus | undefined; search?: string | undefined }) =>
+  queryOptions({ queryKey: ["dxs", "admin", "content", f], queryFn: () => repo().listContent(f) });
+export const contentQuery = (id: string) => queryOptions({ queryKey: ["dxs", "admin", "item", id], queryFn: () => repo().getContent(id) });
