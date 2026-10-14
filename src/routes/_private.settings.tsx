@@ -48,14 +48,14 @@ function SettingsPage() {
           </RadioGroup>
         </fieldset>
         <div className="space-y-1">
-          <Label htmlFor="locale" className="font-display text-xl">Language</Label>
+          <Label htmlFor="locale" className="block font-display text-xl">Language</Label>
           <select id="locale" className="h-9 w-full max-w-xs rounded-md border bg-card px-3 text-sm" {...register("locale")}><option value="en">English</option><option value="es">Español</option><option value="ja">日本語</option></select>
         </div>
         <fieldset className="space-y-4">
           <legend className="font-display text-xl">Notifications</legend>
           <div className="flex items-center justify-between gap-4"><Label htmlFor="en">Email notifications</Label><Switch id="en" checked={watch("emailNotifications")} onCheckedChange={(c) => setValue("emailNotifications", c, { shouldDirty: true })} /></div>
           <div className="flex items-center justify-between gap-4"><Label htmlFor="pu">Product updates</Label><Switch id="pu" checked={watch("productUpdates")} onCheckedChange={(c) => setValue("productUpdates", c, { shouldDirty: true })} /></div>
-          <div className="space-y-1"><Label htmlFor="dg">Digest frequency</Label><select id="dg" className="h-9 w-full max-w-xs rounded-md border bg-card px-3 text-sm" {...register("digestFrequency")}><option value="daily">Daily</option><option value="weekly">Weekly</option><option value="never">Never</option></select></div>
+          <div className="space-y-1"><Label htmlFor="dg" className="block">Digest frequency</Label><select id="dg" className="h-9 w-full max-w-xs rounded-md border bg-card px-3 text-sm" {...register("digestFrequency")}><option value="daily">Daily</option><option value="weekly">Weekly</option><option value="never">Never</option></select></div>
         </fieldset>
         <Button type="submit" disabled={m.isPending || !isDirty}>{m.isPending ? "Saving…" : "Save settings"}</Button>
       </form>
