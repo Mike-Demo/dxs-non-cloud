@@ -11,8 +11,6 @@ export const getRouter = () => {
     context: { queryClient },
     scrollRestoration: true,
     defaultPreloadStaleTime: 0,
-    // Mock-mode data lives in the visitor's browser storage, so route data renders client-side.
-    defaultSsr: false,
     defaultPendingComponent: PageSkeleton,
   });
 

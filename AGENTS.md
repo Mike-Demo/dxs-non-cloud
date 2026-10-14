@@ -12,6 +12,6 @@
 ## Architecture rules
 - UI reads/writes data only through `src/lib/data/queries.ts` / `mutations.ts`, which call the `Repository` interface from `src/lib/data/client.ts`; never import fixtures or a DB client in UI — keeps mock and connected adapters swappable.
 - Publication visibility uses `src/lib/data/publication.ts` in every adapter — one public predicate.
-- Router uses `defaultSsr: false` because mock-mode data lives in browser storage; revisit when connected mode lands.
+- Root route uses `ssr: false` because mock-mode data lives in browser storage; revisit when connected mode lands.
 - Cart/wishlist are Zustand persisted stores with `skipHydration`, rehydrated in the root component — avoids hydration mismatches.
 - Fixtures use the fixed `FIXTURE_REFERENCE_TIME`; tests pass an explicit clock to the mock adapter.

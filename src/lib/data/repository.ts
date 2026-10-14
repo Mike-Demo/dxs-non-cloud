@@ -28,18 +28,18 @@ export interface Paginated<T> {
 }
 
 export interface PostQuery {
-  search?: string;
-  category?: string;
-  tag?: string;
-  page?: number;
-  pageSize?: number;
+  search?: string | undefined;
+  category?: string | undefined;
+  tag?: string | undefined;
+  page?: number | undefined;
+  pageSize?: number | undefined;
 }
 
 export interface ProductQuery {
-  search?: string;
-  category?: string;
-  maxPriceMinor?: number;
-  sort?: "newest" | "price-asc" | "price-desc" | "name";
+  search?: string | undefined;
+  category?: string | undefined;
+  maxPriceMinor?: number | undefined;
+  sort?: "newest" | "price-asc" | "price-desc" | "name" | undefined;
 }
 
 export interface ProductWithVariants extends Product {

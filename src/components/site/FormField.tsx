@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 interface FormFieldProps extends InputHTMLAttributes<HTMLInputElement> {
   id: string;
   label: string;
-  error?: string;
+  error?: string | undefined;
 }
 
 /** Labelled input with an accessible field-level error message. */

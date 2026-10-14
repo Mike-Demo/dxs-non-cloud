@@ -69,6 +69,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
   }),
+  // Mock-mode data lives in browser storage, so routes render client-side.
+  ssr: false,
   shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
