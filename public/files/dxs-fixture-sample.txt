@@ -1,0 +1,5 @@
+DXS fixture sample
+==================
+Reference time: 2026-10-01T00:00:00Z
+Content types: 22
+This local file verifies that resource downloads work offline.
