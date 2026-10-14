@@ -10,12 +10,16 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PrivateRouteImport } from './routes/_private'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as CareersRouteImport } from './routes/careers'
 import { Route as CartRouteImport } from './routes/cart'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as WishlistRouteImport } from './routes/wishlist'
+import { Route as PrivateDashboardRouteImport } from './routes/_private.dashboard'
+import { Route as PrivateProfileRouteImport } from './routes/_private.profile'
+import { Route as PrivateSettingsRouteImport } from './routes/_private.settings'
 import { Route as AuthorsSlugRouteImport } from './routes/authors.$slug'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
@@ -30,6 +34,10 @@ import { Route as ResourcesSlugRouteImport } from './routes/resources.$slug'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivateRoute = PrivateRouteImport.update({
+  id: '/_private',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -61,6 +69,21 @@ const WishlistRoute = WishlistRouteImport.update({
   id: '/wishlist',
   path: '/wishlist',
   getParentRoute: () => rootRouteImport,
+} as any)
+const PrivateDashboardRoute = PrivateDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => PrivateRoute,
+} as any)
+const PrivateProfileRoute = PrivateProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => PrivateRoute,
+} as any)
+const PrivateSettingsRoute = PrivateSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => PrivateRoute,
 } as any)
 const AuthorsSlugRoute = AuthorsSlugRouteImport.update({
   id: '/authors/$slug',
@@ -121,6 +144,9 @@ export interface FileRoutesByFullPath {
   '/checkout': typeof CheckoutRoute
   '/contact': typeof ContactRoute
   '/wishlist': typeof WishlistRoute
+  '/dashboard': typeof PrivateDashboardRoute
+  '/profile': typeof PrivateProfileRoute
+  '/settings': typeof PrivateSettingsRoute
   '/authors/$slug': typeof AuthorsSlugRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/categories/$slug': typeof CategoriesSlugRoute
@@ -140,6 +166,9 @@ export interface FileRoutesByTo {
   '/checkout': typeof CheckoutRoute
   '/contact': typeof ContactRoute
   '/wishlist': typeof WishlistRoute
+  '/dashboard': typeof PrivateDashboardRoute
+  '/profile': typeof PrivateProfileRoute
+  '/settings': typeof PrivateSettingsRoute
   '/authors/$slug': typeof AuthorsSlugRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/categories/$slug': typeof CategoriesSlugRoute
@@ -154,12 +183,16 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_private': typeof PrivateRouteWithChildren
   '/about': typeof AboutRoute
   '/careers': typeof CareersRoute
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
   '/contact': typeof ContactRoute
   '/wishlist': typeof WishlistRoute
+  '/_private/dashboard': typeof PrivateDashboardRoute
+  '/_private/profile': typeof PrivateProfileRoute
+  '/_private/settings': typeof PrivateSettingsRoute
   '/authors/$slug': typeof AuthorsSlugRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/categories/$slug': typeof CategoriesSlugRoute
@@ -181,6 +214,9 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/contact'
     | '/wishlist'
+    | '/dashboard'
+    | '/profile'
+    | '/settings'
     | '/authors/$slug'
     | '/blog/$slug'
     | '/categories/$slug'
@@ -200,6 +236,9 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/contact'
     | '/wishlist'
+    | '/dashboard'
+    | '/profile'
+    | '/settings'
     | '/authors/$slug'
     | '/blog/$slug'
     | '/categories/$slug'
@@ -213,12 +252,16 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/_private'
     | '/about'
     | '/careers'
     | '/cart'
     | '/checkout'
     | '/contact'
     | '/wishlist'
+    | '/_private/dashboard'
+    | '/_private/profile'
+    | '/_private/settings'
     | '/authors/$slug'
     | '/blog/$slug'
     | '/categories/$slug'
@@ -233,6 +276,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  PrivateRoute: typeof PrivateRouteWithChildren
   AboutRoute: typeof AboutRoute
   CareersRoute: typeof CareersRoute
   CartRoute: typeof CartRoute
@@ -258,6 +302,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_private': {
+      id: '/_private'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof PrivateRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about': {
@@ -301,6 +352,27 @@ declare module '@tanstack/react-router' {
       fullPath: '/wishlist'
       preLoaderRoute: typeof WishlistRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_private/dashboard': {
+      id: '/_private/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof PrivateDashboardRouteImport
+      parentRoute: typeof PrivateRoute
+    }
+    '/_private/profile': {
+      id: '/_private/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof PrivateProfileRouteImport
+      parentRoute: typeof PrivateRoute
+    }
+    '/_private/settings': {
+      id: '/_private/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof PrivateSettingsRouteImport
+      parentRoute: typeof PrivateRoute
     }
     '/authors/$slug': {
       id: '/authors/$slug'
@@ -375,8 +447,24 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface PrivateRouteChildren {
+  PrivateDashboardRoute: typeof PrivateDashboardRoute
+  PrivateProfileRoute: typeof PrivateProfileRoute
+  PrivateSettingsRoute: typeof PrivateSettingsRoute
+}
+
+const PrivateRouteChildren: PrivateRouteChildren = {
+  PrivateDashboardRoute: PrivateDashboardRoute,
+  PrivateProfileRoute: PrivateProfileRoute,
+  PrivateSettingsRoute: PrivateSettingsRoute,
+}
+
+const PrivateRouteWithChildren =
+  PrivateRoute._addFileChildren(PrivateRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  PrivateRoute: PrivateRouteWithChildren,
   AboutRoute: AboutRoute,
   CareersRoute: CareersRoute,
   CartRoute: CartRoute,
