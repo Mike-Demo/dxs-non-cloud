@@ -16,6 +16,8 @@ import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { Toaster } from "@/components/ui/sonner";
 import { rehydrateStores } from "@/lib/stores";
+import { FeedbackWidget } from "@/components/site/FeedbackWidget";
+import { ThemeSync } from "@/components/site/ThemeSync";
 
 function NotFoundComponent() {
   return (
@@ -103,6 +105,8 @@ function RootComponent() {
         <Outlet />
       </main>
       <SiteFooter />
+      <FeedbackWidget />
+      <ThemeSync />
       <Toaster />
     </QueryClientProvider>
   );

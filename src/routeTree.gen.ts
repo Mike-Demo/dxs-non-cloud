@@ -31,6 +31,7 @@ import { Route as ProductsSlugRouteImport } from './routes/products.$slug'
 import { Route as ResourcesIndexRouteImport } from './routes/resources.index'
 import { Route as ResourcesSlugRouteImport } from './routes/resources.$slug'
 import { Route as PrivateAdminIndexRouteImport } from './routes/_private.admin.index'
+import { Route as PrivateAdminContentIdRouteImport } from './routes/_private.admin.content.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -141,6 +142,11 @@ const PrivateAdminIndexRoute = PrivateAdminIndexRouteImport.update({
   path: '/admin/',
   getParentRoute: () => PrivateRoute,
 } as any)
+const PrivateAdminContentIdRoute = PrivateAdminContentIdRouteImport.update({
+  id: '/admin/content/$id',
+  path: '/admin/content/$id',
+  getParentRoute: () => PrivateRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -164,6 +170,7 @@ export interface FileRoutesByFullPath {
   '/products/': typeof ProductsIndexRoute
   '/resources/': typeof ResourcesIndexRoute
   '/admin/': typeof PrivateAdminIndexRoute
+  '/admin/content/$id': typeof PrivateAdminContentIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -187,6 +194,7 @@ export interface FileRoutesByTo {
   '/products': typeof ProductsIndexRoute
   '/resources': typeof ResourcesIndexRoute
   '/admin': typeof PrivateAdminIndexRoute
+  '/admin/content/$id': typeof PrivateAdminContentIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -212,6 +220,7 @@ export interface FileRoutesById {
   '/products/': typeof ProductsIndexRoute
   '/resources/': typeof ResourcesIndexRoute
   '/_private/admin/': typeof PrivateAdminIndexRoute
+  '/_private/admin/content/$id': typeof PrivateAdminContentIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -237,6 +246,7 @@ export interface FileRouteTypes {
     | '/products/'
     | '/resources/'
     | '/admin/'
+    | '/admin/content/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -260,6 +270,7 @@ export interface FileRouteTypes {
     | '/products'
     | '/resources'
     | '/admin'
+    | '/admin/content/$id'
   id:
     | '__root__'
     | '/'
@@ -284,6 +295,7 @@ export interface FileRouteTypes {
     | '/products/'
     | '/resources/'
     | '/_private/admin/'
+    | '/_private/admin/content/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -463,6 +475,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivateAdminIndexRouteImport
       parentRoute: typeof PrivateRoute
     }
+    '/_private/admin/content/$id': {
+      id: '/_private/admin/content/$id'
+      path: '/admin/content/$id'
+      fullPath: '/admin/content/$id'
+      preLoaderRoute: typeof PrivateAdminContentIdRouteImport
+      parentRoute: typeof PrivateRoute
+    }
   }
 }
 
@@ -471,6 +490,7 @@ interface PrivateRouteChildren {
   PrivateProfileRoute: typeof PrivateProfileRoute
   PrivateSettingsRoute: typeof PrivateSettingsRoute
   PrivateAdminIndexRoute: typeof PrivateAdminIndexRoute
+  PrivateAdminContentIdRoute: typeof PrivateAdminContentIdRoute
 }
 
 const PrivateRouteChildren: PrivateRouteChildren = {
@@ -478,6 +498,7 @@ const PrivateRouteChildren: PrivateRouteChildren = {
   PrivateProfileRoute: PrivateProfileRoute,
   PrivateSettingsRoute: PrivateSettingsRoute,
   PrivateAdminIndexRoute: PrivateAdminIndexRoute,
+  PrivateAdminContentIdRoute: PrivateAdminContentIdRoute,
 }
 
 const PrivateRouteWithChildren =
