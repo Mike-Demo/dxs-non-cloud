@@ -4,6 +4,7 @@ import { isPubliclyVisible, isUpcoming, promoteIfDue } from "./publication";
 import { NotFoundError, type Paginated, type ProductWithVariants, type Repository } from "./repository";
 import { applicationSchema, cartLineSchema, checkoutSchema, contactSchema, newsletterSchema, registrationSchema } from "./schemas";
 import { computeTotals } from "./pricing";
+import { createPrivateOps } from "./private-ops";
 
 export interface KeyValueStore {
   get(key: string): string | null;
@@ -60,6 +61,7 @@ export const createMockRepository = ({ store, clock, idFactory }: MockOptions): 
   };
 
   const repo: Repository = {
+    ...createPrivateOps({ read, save, clock, stamp }),
     mode: "mock",
     async getPage(slug) {
       const page = visible(read().pages).find((p) => p.slug === slug);
