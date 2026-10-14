@@ -38,3 +38,4 @@ export const contentListQuery = (f: { type?: ContentType | undefined; status?: P
   queryOptions({ queryKey: ["dxs", "admin", "content", f], queryFn: () => repo().listContent(f) });
 export const contentQuery = (id: string) => queryOptions({ queryKey: ["dxs", "admin", "item", id], queryFn: () => repo().getContent(id) });
 export const reviewsQuery = (moderation?: "approved" | "pending" | "rejected") => queryOptions({ queryKey: ["dxs", "admin", "reviews", moderation ?? "all"], queryFn: () => repo().listReviews(moderation) });
+export const productVariantsAdminQuery = (productId: string) => queryOptions({ queryKey: ["dxs", "admin", "variants", productId], queryFn: () => repo().listProductVariants(productId) });

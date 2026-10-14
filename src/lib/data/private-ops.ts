@@ -10,6 +10,7 @@ import type {
   Order,
   Product,
   ProductReview,
+  ProductVariant,
   Profile,
   Resource,
   RichText,
@@ -93,6 +94,7 @@ export interface PrivateRepository {
   createContent(type: ContentType): Promise<{ id: string }>;
   saveContent(id: string, common: CommonContentInput, typed?: TypedFields): Promise<ContentRecord>;
   listReviews(moderation?: ProductReview["moderation"]): Promise<(ProductReview & { productName: string })[]>;
+  listProductVariants(productId: string): Promise<ProductVariant[]>;
   moderateReview(id: string, moderation: ProductReview["moderation"]): Promise<void>;
   deleteContent(id: string): Promise<{ removedReferences: number }>;
   uploadMedia(input: UploadInput): Promise<MediaAsset>;
@@ -304,6 +306,9 @@ export const createPrivateOps = ({ read, save, clock, stamp }: Ctx): PrivateRepo
         .filter((r) => !moderation || r.moderation === moderation)
         .map((r) => ({ ...r, productName: d.products.find((p) => p.id === r.productId)?.name ?? "Deleted product" }))
         .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+    },
+    async listProductVariants(productId) {
+      return read().variants.filter((v) => v.productId === productId);
     },
     async moderateReview(id, moderation) {
       const d = read();
