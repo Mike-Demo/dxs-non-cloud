@@ -17,6 +17,7 @@ import { Route as CartRouteImport } from './routes/cart'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as DesignSystemRouteImport } from './routes/design-system'
+import { Route as LicensesRouteImport } from './routes/licenses'
 import { Route as WishlistRouteImport } from './routes/wishlist'
 import { Route as PrivateDashboardRouteImport } from './routes/_private.dashboard'
 import { Route as PrivateProfileRouteImport } from './routes/_private.profile'
@@ -72,6 +73,11 @@ const ContactRoute = ContactRouteImport.update({
 const DesignSystemRoute = DesignSystemRouteImport.update({
   id: '/design-system',
   path: '/design-system',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LicensesRoute = LicensesRouteImport.update({
+  id: '/licenses',
+  path: '/licenses',
   getParentRoute: () => rootRouteImport,
 } as any)
 const WishlistRoute = WishlistRouteImport.update({
@@ -168,6 +174,7 @@ export interface FileRoutesByFullPath {
   '/checkout': typeof CheckoutRoute
   '/contact': typeof ContactRoute
   '/design-system': typeof DesignSystemRoute
+  '/licenses': typeof LicensesRoute
   '/wishlist': typeof WishlistRoute
   '/dashboard': typeof PrivateDashboardRoute
   '/profile': typeof PrivateProfileRoute
@@ -194,6 +201,7 @@ export interface FileRoutesByTo {
   '/checkout': typeof CheckoutRoute
   '/contact': typeof ContactRoute
   '/design-system': typeof DesignSystemRoute
+  '/licenses': typeof LicensesRoute
   '/wishlist': typeof WishlistRoute
   '/dashboard': typeof PrivateDashboardRoute
   '/profile': typeof PrivateProfileRoute
@@ -222,6 +230,7 @@ export interface FileRoutesById {
   '/checkout': typeof CheckoutRoute
   '/contact': typeof ContactRoute
   '/design-system': typeof DesignSystemRoute
+  '/licenses': typeof LicensesRoute
   '/wishlist': typeof WishlistRoute
   '/_private/dashboard': typeof PrivateDashboardRoute
   '/_private/profile': typeof PrivateProfileRoute
@@ -250,6 +259,7 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/contact'
     | '/design-system'
+    | '/licenses'
     | '/wishlist'
     | '/dashboard'
     | '/profile'
@@ -276,6 +286,7 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/contact'
     | '/design-system'
+    | '/licenses'
     | '/wishlist'
     | '/dashboard'
     | '/profile'
@@ -303,6 +314,7 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/contact'
     | '/design-system'
+    | '/licenses'
     | '/wishlist'
     | '/_private/dashboard'
     | '/_private/profile'
@@ -331,6 +343,7 @@ export interface RootRouteChildren {
   CheckoutRoute: typeof CheckoutRoute
   ContactRoute: typeof ContactRoute
   DesignSystemRoute: typeof DesignSystemRoute
+  LicensesRoute: typeof LicensesRoute
   WishlistRoute: typeof WishlistRoute
   AuthorsSlugRoute: typeof AuthorsSlugRoute
   BlogSlugRoute: typeof BlogSlugRoute
@@ -400,6 +413,13 @@ declare module '@tanstack/react-router' {
       path: '/design-system'
       fullPath: '/design-system'
       preLoaderRoute: typeof DesignSystemRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/licenses': {
+      id: '/licenses'
+      path: '/licenses'
+      fullPath: '/licenses'
+      preLoaderRoute: typeof LicensesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/wishlist': {
@@ -554,6 +574,7 @@ const rootRouteChildren: RootRouteChildren = {
   CheckoutRoute: CheckoutRoute,
   ContactRoute: ContactRoute,
   DesignSystemRoute: DesignSystemRoute,
+  LicensesRoute: LicensesRoute,
   WishlistRoute: WishlistRoute,
   AuthorsSlugRoute: AuthorsSlugRoute,
   BlogSlugRoute: BlogSlugRoute,
