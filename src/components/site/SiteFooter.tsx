@@ -23,6 +23,9 @@ export const SiteFooter = () => {
         </div>
         <nav aria-label="Footer" className="grid grid-cols-2 gap-2 text-sm">
           {NAV_ITEMS.map((n) => <Link key={n.to} to={n.to} className="text-muted-foreground hover:text-foreground">{n.label}</Link>)}
+          <Link to="/dashboard" className="text-muted-foreground hover:text-foreground">Dashboard</Link>
+          <Link to="/admin" className="text-muted-foreground hover:text-foreground">Admin</Link>
+          <Link to="/design-system" className="text-muted-foreground hover:text-foreground">Design system</Link>
         </nav>
         <div>
           <p className="eyebrow mb-3">Newsletter</p>

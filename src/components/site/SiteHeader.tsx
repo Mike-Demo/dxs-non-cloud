@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Heart, Menu, ShoppingBag } from "lucide-react";
+import { Heart, LayoutDashboard, Menu, ShoppingBag } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
@@ -42,6 +42,9 @@ export const SiteHeader = () => {
           ))}
         </nav>
         <div className="flex items-center gap-1">
+          <Button asChild variant="ghost" size="icon" aria-label="Dashboard">
+            <Link to="/dashboard"><LayoutDashboard className="size-5" /></Link>
+          </Button>
           <Button asChild variant="ghost" size="icon" aria-label={`Wishlist${mounted ? `, ${wishCount} items` : ""}`}>
             <Link to="/wishlist" className="relative">
               <Heart className="size-5" />

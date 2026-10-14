@@ -10,12 +10,17 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PrivateRouteImport } from './routes/_private'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as CareersRouteImport } from './routes/careers'
 import { Route as CartRouteImport } from './routes/cart'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as DesignSystemRouteImport } from './routes/design-system'
 import { Route as WishlistRouteImport } from './routes/wishlist'
+import { Route as PrivateDashboardRouteImport } from './routes/_private.dashboard'
+import { Route as PrivateProfileRouteImport } from './routes/_private.profile'
+import { Route as PrivateSettingsRouteImport } from './routes/_private.settings'
 import { Route as AuthorsSlugRouteImport } from './routes/authors.$slug'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
@@ -26,10 +31,16 @@ import { Route as ProductsIndexRouteImport } from './routes/products.index'
 import { Route as ProductsSlugRouteImport } from './routes/products.$slug'
 import { Route as ResourcesIndexRouteImport } from './routes/resources.index'
 import { Route as ResourcesSlugRouteImport } from './routes/resources.$slug'
+import { Route as PrivateAdminIndexRouteImport } from './routes/_private.admin.index'
+import { Route as PrivateAdminContentIdRouteImport } from './routes/_private.admin.content.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivateRoute = PrivateRouteImport.update({
+  id: '/_private',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -57,10 +68,30 @@ const ContactRoute = ContactRouteImport.update({
   path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DesignSystemRoute = DesignSystemRouteImport.update({
+  id: '/design-system',
+  path: '/design-system',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const WishlistRoute = WishlistRouteImport.update({
   id: '/wishlist',
   path: '/wishlist',
   getParentRoute: () => rootRouteImport,
+} as any)
+const PrivateDashboardRoute = PrivateDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => PrivateRoute,
+} as any)
+const PrivateProfileRoute = PrivateProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => PrivateRoute,
+} as any)
+const PrivateSettingsRoute = PrivateSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => PrivateRoute,
 } as any)
 const AuthorsSlugRoute = AuthorsSlugRouteImport.update({
   id: '/authors/$slug',
@@ -112,6 +143,16 @@ const ResourcesSlugRoute = ResourcesSlugRouteImport.update({
   path: '/resources/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PrivateAdminIndexRoute = PrivateAdminIndexRouteImport.update({
+  id: '/admin/',
+  path: '/admin/',
+  getParentRoute: () => PrivateRoute,
+} as any)
+const PrivateAdminContentIdRoute = PrivateAdminContentIdRouteImport.update({
+  id: '/admin/content/$id',
+  path: '/admin/content/$id',
+  getParentRoute: () => PrivateRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -120,7 +161,11 @@ export interface FileRoutesByFullPath {
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
   '/contact': typeof ContactRoute
+  '/design-system': typeof DesignSystemRoute
   '/wishlist': typeof WishlistRoute
+  '/dashboard': typeof PrivateDashboardRoute
+  '/profile': typeof PrivateProfileRoute
+  '/settings': typeof PrivateSettingsRoute
   '/authors/$slug': typeof AuthorsSlugRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/categories/$slug': typeof CategoriesSlugRoute
@@ -131,6 +176,8 @@ export interface FileRoutesByFullPath {
   '/events/': typeof EventsIndexRoute
   '/products/': typeof ProductsIndexRoute
   '/resources/': typeof ResourcesIndexRoute
+  '/admin/': typeof PrivateAdminIndexRoute
+  '/admin/content/$id': typeof PrivateAdminContentIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -139,7 +186,11 @@ export interface FileRoutesByTo {
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
   '/contact': typeof ContactRoute
+  '/design-system': typeof DesignSystemRoute
   '/wishlist': typeof WishlistRoute
+  '/dashboard': typeof PrivateDashboardRoute
+  '/profile': typeof PrivateProfileRoute
+  '/settings': typeof PrivateSettingsRoute
   '/authors/$slug': typeof AuthorsSlugRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/categories/$slug': typeof CategoriesSlugRoute
@@ -150,16 +201,23 @@ export interface FileRoutesByTo {
   '/events': typeof EventsIndexRoute
   '/products': typeof ProductsIndexRoute
   '/resources': typeof ResourcesIndexRoute
+  '/admin': typeof PrivateAdminIndexRoute
+  '/admin/content/$id': typeof PrivateAdminContentIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_private': typeof PrivateRouteWithChildren
   '/about': typeof AboutRoute
   '/careers': typeof CareersRoute
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
   '/contact': typeof ContactRoute
+  '/design-system': typeof DesignSystemRoute
   '/wishlist': typeof WishlistRoute
+  '/_private/dashboard': typeof PrivateDashboardRoute
+  '/_private/profile': typeof PrivateProfileRoute
+  '/_private/settings': typeof PrivateSettingsRoute
   '/authors/$slug': typeof AuthorsSlugRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/categories/$slug': typeof CategoriesSlugRoute
@@ -170,6 +228,8 @@ export interface FileRoutesById {
   '/events/': typeof EventsIndexRoute
   '/products/': typeof ProductsIndexRoute
   '/resources/': typeof ResourcesIndexRoute
+  '/_private/admin/': typeof PrivateAdminIndexRoute
+  '/_private/admin/content/$id': typeof PrivateAdminContentIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -180,7 +240,11 @@ export interface FileRouteTypes {
     | '/cart'
     | '/checkout'
     | '/contact'
+    | '/design-system'
     | '/wishlist'
+    | '/dashboard'
+    | '/profile'
+    | '/settings'
     | '/authors/$slug'
     | '/blog/$slug'
     | '/categories/$slug'
@@ -191,6 +255,8 @@ export interface FileRouteTypes {
     | '/events/'
     | '/products/'
     | '/resources/'
+    | '/admin/'
+    | '/admin/content/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -199,7 +265,11 @@ export interface FileRouteTypes {
     | '/cart'
     | '/checkout'
     | '/contact'
+    | '/design-system'
     | '/wishlist'
+    | '/dashboard'
+    | '/profile'
+    | '/settings'
     | '/authors/$slug'
     | '/blog/$slug'
     | '/categories/$slug'
@@ -210,15 +280,22 @@ export interface FileRouteTypes {
     | '/events'
     | '/products'
     | '/resources'
+    | '/admin'
+    | '/admin/content/$id'
   id:
     | '__root__'
     | '/'
+    | '/_private'
     | '/about'
     | '/careers'
     | '/cart'
     | '/checkout'
     | '/contact'
+    | '/design-system'
     | '/wishlist'
+    | '/_private/dashboard'
+    | '/_private/profile'
+    | '/_private/settings'
     | '/authors/$slug'
     | '/blog/$slug'
     | '/categories/$slug'
@@ -229,15 +306,19 @@ export interface FileRouteTypes {
     | '/events/'
     | '/products/'
     | '/resources/'
+    | '/_private/admin/'
+    | '/_private/admin/content/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  PrivateRoute: typeof PrivateRouteWithChildren
   AboutRoute: typeof AboutRoute
   CareersRoute: typeof CareersRoute
   CartRoute: typeof CartRoute
   CheckoutRoute: typeof CheckoutRoute
   ContactRoute: typeof ContactRoute
+  DesignSystemRoute: typeof DesignSystemRoute
   WishlistRoute: typeof WishlistRoute
   AuthorsSlugRoute: typeof AuthorsSlugRoute
   BlogSlugRoute: typeof BlogSlugRoute
@@ -258,6 +339,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_private': {
+      id: '/_private'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof PrivateRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about': {
@@ -295,12 +383,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/design-system': {
+      id: '/design-system'
+      path: '/design-system'
+      fullPath: '/design-system'
+      preLoaderRoute: typeof DesignSystemRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/wishlist': {
       id: '/wishlist'
       path: '/wishlist'
       fullPath: '/wishlist'
       preLoaderRoute: typeof WishlistRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_private/dashboard': {
+      id: '/_private/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof PrivateDashboardRouteImport
+      parentRoute: typeof PrivateRoute
+    }
+    '/_private/profile': {
+      id: '/_private/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof PrivateProfileRouteImport
+      parentRoute: typeof PrivateRoute
+    }
+    '/_private/settings': {
+      id: '/_private/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof PrivateSettingsRouteImport
+      parentRoute: typeof PrivateRoute
     }
     '/authors/$slug': {
       id: '/authors/$slug'
@@ -372,16 +488,51 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResourcesSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_private/admin/': {
+      id: '/_private/admin/'
+      path: '/admin'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof PrivateAdminIndexRouteImport
+      parentRoute: typeof PrivateRoute
+    }
+    '/_private/admin/content/$id': {
+      id: '/_private/admin/content/$id'
+      path: '/admin/content/$id'
+      fullPath: '/admin/content/$id'
+      preLoaderRoute: typeof PrivateAdminContentIdRouteImport
+      parentRoute: typeof PrivateRoute
+    }
   }
 }
 
+interface PrivateRouteChildren {
+  PrivateDashboardRoute: typeof PrivateDashboardRoute
+  PrivateProfileRoute: typeof PrivateProfileRoute
+  PrivateSettingsRoute: typeof PrivateSettingsRoute
+  PrivateAdminIndexRoute: typeof PrivateAdminIndexRoute
+  PrivateAdminContentIdRoute: typeof PrivateAdminContentIdRoute
+}
+
+const PrivateRouteChildren: PrivateRouteChildren = {
+  PrivateDashboardRoute: PrivateDashboardRoute,
+  PrivateProfileRoute: PrivateProfileRoute,
+  PrivateSettingsRoute: PrivateSettingsRoute,
+  PrivateAdminIndexRoute: PrivateAdminIndexRoute,
+  PrivateAdminContentIdRoute: PrivateAdminContentIdRoute,
+}
+
+const PrivateRouteWithChildren =
+  PrivateRoute._addFileChildren(PrivateRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  PrivateRoute: PrivateRouteWithChildren,
   AboutRoute: AboutRoute,
   CareersRoute: CareersRoute,
   CartRoute: CartRoute,
   CheckoutRoute: CheckoutRoute,
   ContactRoute: ContactRoute,
+  DesignSystemRoute: DesignSystemRoute,
   WishlistRoute: WishlistRoute,
   AuthorsSlugRoute: AuthorsSlugRoute,
   BlogSlugRoute: BlogSlugRoute,

@@ -1,3 +1,4 @@
+import type { PrivateRepository } from "./private-ops";
 import type {
   Author,
   BlogPost,
@@ -60,7 +61,7 @@ export class NotFoundError extends Error {
 }
 
 /** Typed operations shared by the mock and connected adapters. UI code depends only on this. */
-export interface Repository {
+export interface Repository extends PrivateRepository {
   mode: "mock" | "cloud";
   getPage(slug: string): Promise<Page>;
   listPosts(q: PostQuery): Promise<Paginated<BlogPost>>;

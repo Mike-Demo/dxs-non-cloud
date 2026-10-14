@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ProductCard } from "@/components/site/Cards";
 import { RichText } from "@/components/site/RichText";
+import { ReviewForm } from "@/components/site/ReviewForm";
 import { NotFoundPanel } from "@/components/site/States";
 import { mediaQuery, productQuery, productsByIdsQuery } from "@/lib/data/queries";
 import { formatMoney } from "@/lib/data/pricing";
@@ -112,6 +113,7 @@ function ProductPage() {
             ))}
           </ul>
         )}
+        <div className="mt-8"><ReviewForm productId={product.id} /></div>
       </section>
       {related.length > 0 && (
         <section className="container-page mt-16"><h2 className="mb-6 text-2xl">You may also like</h2><div className="grid grid-cols-2 gap-6 md:grid-cols-3">{related.map((p) => <ProductCard key={p.id} product={p} />)}</div></section>

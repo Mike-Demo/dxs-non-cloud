@@ -277,4 +277,80 @@ export interface Dataset {
   registrations: EventRegistration[];
   applications: JobApplication[];
   orders: Order[];
+  private: PrivateData;
+}
+
+/* Demo identity, private records and admin views */
+
+export interface Profile extends BaseRecord {
+  name: string;
+  email: string;
+  bio: string;
+  website: string | null;
+  avatarDataUrl: string | null;
+  role: "admin";
+}
+
+export interface Settings extends BaseRecord {
+  theme: "light" | "dark" | "system";
+  locale: "en" | "es" | "ja";
+  emailNotifications: boolean;
+  productUpdates: boolean;
+  digestFrequency: "daily" | "weekly" | "never";
+}
+
+export interface Notification extends BaseRecord {
+  title: string;
+  body: string;
+  type: "order" | "event" | "content" | "system";
+  href: string | null;
+  readAt: string | null;
+}
+
+export interface TicketMessage {
+  at: string;
+  from: "customer" | "agent";
+  body: string;
+}
+
+export interface SupportTicket extends BaseRecord {
+  subject: string;
+  category: "billing" | "technical" | "content" | "other";
+  priority: "low" | "normal" | "high";
+  messages: TicketMessage[];
+  state: "open" | "pending" | "resolved";
+}
+
+export interface SurveyResponse extends BaseRecord {
+  satisfaction: 1 | 2 | 3 | 4 | 5;
+  mostUsed: "blog" | "shop" | "events" | "resources";
+  comments: string;
+}
+
+export interface Feedback extends BaseRecord {
+  page: string;
+  sentiment: "positive" | "neutral" | "negative";
+  message: string;
+}
+
+export type ContentType = "post" | "product" | "event" | "resource";
+
+export interface ContentSummary {
+  id: string;
+  type: ContentType;
+  title: string;
+  slug: string;
+  status: PublicationStatus;
+  publishedAt: string | null;
+  scheduledAt: string | null;
+  updatedAt: string;
+}
+
+export interface PrivateData {
+  profile: Profile;
+  settings: Settings;
+  notifications: Notification[];
+  tickets: SupportTicket[];
+  surveys: SurveyResponse[];
+  feedback: Feedback[];
 }
