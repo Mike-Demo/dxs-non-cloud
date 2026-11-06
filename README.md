@@ -1,6 +1,6 @@
 # DXS Non-Cloud
 
-Web search https://www.firecrawl.dev/alexandria/categories/developer
+Web search https://alexandria.firecrawl.dev/categories/developer
 
 Plan a testbed site using this repo as a reference: @connector:github:"GitHub API"  https://github.com/Mike-Demo/dxs-cms-testbed.git if you have any questions use Firecrawl Developer As the source of truth.
 
